@@ -3,16 +3,17 @@ import {Card, Form,  Button} from 'react-bootstrap';
 
 interface props {
     note: {title: string, text: string},
+    handleSaveNote(title: string, text: string): void
     // onSavePressed(title: string, text: string): void
 }
 
-function Note({note}: props){
+function Note({note, handleSaveNote}: props){
 
     const [input, setInput] = useState('');
-
+    
     useEffect(() => {
         setInput(note.text);
-    }, []);
+    }, [note.text]);
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>){
         const input: string = event.target.value;
@@ -26,7 +27,7 @@ function Note({note}: props){
             <Form.Group>
                 <Form.Control as="textarea" rows={30} style={{resize: 'none'}} onChange={handleInputChange} value={input} />
             </Form.Group>
-            <Button variant="primary" style={{float: 'right'}}>Save</Button>
+            <Button variant="primary" style={{float: 'right'}} onClick={() => handleSaveNote(note.title, input)}>Save</Button>
         </Card.Body>
     </Card>
     );
