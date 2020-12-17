@@ -1,12 +1,23 @@
 import {Card, ListGroup} from 'react-bootstrap';
 import NoteListItem from './NoteListItem';
 
-function NoteList() {
+interface props {
+    notes: {title: string, text: string}[],
+    // onItemClicked(title: string): void,
+    // onRemoveBtnPressed(title: string): void,
+    // onCreateClicked(title: string, text: string): void
+}
+
+function NoteList({notes}: props) {
+
     return (
-    <Card style={{ width: '18rem' }}>
+    <Card style={{width: '100%', height: '100%', backgroundColor: 'darkgrey'}}>
         <Card.Body>
             <ListGroup>
-                <NoteListItem />
+                {notes.map(note => <NoteListItem title={note.title} />)}
+                <ListGroup.Item style={{padding: '.2rem'}} >
+                    <span className="align-middle">Create Notes</span>
+                </ListGroup.Item>
             </ListGroup>
         </Card.Body>
     </Card>
