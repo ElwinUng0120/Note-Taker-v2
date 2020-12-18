@@ -1,10 +1,16 @@
-import {MouseEvent} from 'react';
+import {ChangeEvent, useState} from 'react';
 import {Navbar, Form, FormControl, InputGroup, Button} from 'react-bootstrap';
 
-function Banner(){
+interface props {
+    handleSearchNote(title: string): void
+}
 
-    function btnPressed(event: MouseEvent){
-        console.log(event);
+function Banner({handleSearchNote}: props){
+
+    const [input, setInput] = useState('');
+
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+        setInput(event.target.value);
     }
 
     return (
@@ -15,13 +21,15 @@ function Banner(){
                     placeholder="Keywords..."
                     aria-label="Search"
                     style={{width: '18.5rem'}}
+                    value={input}
+                    onChange={handleInputChange}
                 />
                 <InputGroup.Append>
-                    <Button><i className="fas fa-search"></i></Button>
+                    <Button onClick={() => handleSearchNote(input)}><i className="fas fa-search"></i></Button>
                 </InputGroup.Append>
             </InputGroup>
         </Form>
-        <Button variant='secondary' onClick={btnPressed} >Login</Button>
+        <Button variant='secondary'>Login</Button>
     </Navbar>
     );
 }
