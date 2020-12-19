@@ -1,27 +1,33 @@
-import {MouseEvent} from 'react';
 import {Card, ListGroup} from 'react-bootstrap';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
+import {createNote} from '../redux/actions';
 import NoteListItem from './NoteListItem';
 
 interface props {
-    notes: {title: string, text: string}[],
-    handleNoteClicked(title: string): void,
-    handleCreateNote(): void,
-    handleRemoveNote(event: MouseEvent, title: string): void
-    
-    // onItemClicked(title: string): void,
-    // onRemoveBtnPressed(title: string): void,
-    // onCreateClicked(title: string, text: string): void
+    notes: {title: string, text: string, isDisplay: boolean, isMatched: boolean}[],
+    handleCreateNote(title: string, text: string): void,
 }
 
-function NoteList({notes, handleNoteClicked, handleCreateNote, handleRemoveNote}: props) {
+interface actions {
+    type: string,
+    payload: {title: string, text: string}
+}
+
+function NoteList({notes, handleCreateNote}: props) {
 
     return (
     <Card style={{width: '100%', height: '100%', backgroundColor: 'darkgrey'}}>
         <Card.Body>
             <ListGroup>
-                {notes.map(note => <NoteListItem title={note.title} handleNoteClicked={handleNoteClicked} handleRemoveNote={handleRemoveNote} key={note.title}/>)}
-                <ListGroup.Item style={{padding: '.2rem'}} >
-                    <span className="align-middle" onClick={handleCreateNote}>Create Notes</span>
+                {notes.map(note => {
+                    if(note.isMatched) {
+                        return <NoteListItem title={note.title} key={note.title}/>
+                    }
+                    return null;
+                })}
+                <ListGroup.Item style={{padding: '.2rem'}} onClick={() => handleCreateNote('New Note #' + notes.length, 'Empty note...')}>
+                    <span className="align-middle">Create Notes</span>
                 </ListGroup.Item>
             </ListGroup>
         </Card.Body>
@@ -29,4 +35,12 @@ function NoteList({notes, handleNoteClicked, handleCreateNote, handleRemoveNote}
     );
 }
 
-export default NoteList;
+const mapStateToProps = (state: props) => ({
+    notes: state.notes
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<actions>) => ({
+    handleCreateNote: (title: string, text: string) => dispatch(createNote(title, text)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NoteList);

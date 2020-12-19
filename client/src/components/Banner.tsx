@@ -1,8 +1,16 @@
 import {ChangeEvent, useState} from 'react';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
+import {searchNote} from '../redux/actions';
 import {Navbar, Form, FormControl, InputGroup, Button} from 'react-bootstrap';
 
 interface props {
     handleSearchNote(title: string): void
+}
+
+interface actions {
+    type: string,
+    payload: { title: string}
 }
 
 function Banner({handleSearchNote}: props){
@@ -34,4 +42,8 @@ function Banner({handleSearchNote}: props){
     );
 }
 
-export default Banner;
+const mapDispatchToProps = (dispatch: Dispatch<actions>) => ({
+    handleSearchNote: (title: string) => dispatch(searchNote(title)),
+});
+
+export default connect(null, mapDispatchToProps)(Banner);
